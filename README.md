@@ -15,21 +15,25 @@
 
 - Send POST Request to this endpoint
     ```
-    http://0.0.0.0:8000/api/recommend-doctor
+    http://0.0.0.0:8000/api/recommend-doc
     ```
 - Sample Input
     ```
     {
-        "symptoms" : "common cold and fever with red spots all over the body" 
+        "symptoms" : "leg pain with difficulty to walk"
     }
     ```
 - Sample Output
     ```
    {
-    "data": [
-        "Dermatologist",
-        "Neurologist",
-        "Allergist_Immunologist"
+    "data": 
+        [
+            {
+            "Osteoarthristis": "Rheumatologist"
+            },
+            {
+            "Arthritis": "Rheumatologist"
+            }
         ]
     }
     ```

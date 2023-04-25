@@ -12,3 +12,5 @@ djangorestframework==3.12.4
 inflect
 pip-tools
 pyspellchecker
+spacy
+scispacy

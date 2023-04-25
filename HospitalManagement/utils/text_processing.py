@@ -4,10 +4,11 @@ import inflect
 import pandas as pd
 from spellchecker import SpellChecker
 from utils.cosine_similarity import get_cosine_similarities
+from utils.generate_vector_with_spacy import create_vector_based_on_similar_word
 
 from .stop_words import stop_words
 
-df = pd.read_csv("./datasets/updated_randomized_dataset.csv")
+df = pd.read_csv("./datasets/Training.csv")
 
 
 columns = df.columns[:-2]
@@ -115,6 +116,29 @@ def remove_special_characters_from_word(word):
     return words
 
 
+
+def remove_stop_words_from_sentence(sentence):
+    result = []
+    splitted_words = re.split(r"[,\s]+", sentence.lower())
+    for word in splitted_words:
+        if word not in stop_words:
+            result.append(clean_numbers_and_special_characters(word))
+    final_result = " ".join(result)
+    return final_result
+        
+
+def give_disease_spacy(input_text):
+    disease_result = []
+    clean_sentence = remove_stop_words_from_sentence(input_text)
+    vec2 = create_vector_based_on_similar_word(clean_sentence)
+    if all(val == 0 for val in vec2):
+        return None
+    similarities = get_cosine_similarities(vec2)
+    results = sort_similarities(similarities)
+    for res in results:
+        if res[1] > 0.05:
+            disease_result.append(df.iloc[res[0]]["prognosis"])
+    return disease_result
 
 if __name__ == "__main__":
     input_text = input("Enter your symptoms: ")

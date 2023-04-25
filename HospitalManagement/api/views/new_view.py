@@ -4,10 +4,10 @@ from rest_framework import serializers, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from utils.stop_words import specialties
-from utils.text_processing import give_disease, is_input_valid
+from utils.text_processing import give_disease, give_disease_spacy, is_input_valid
 
 
-class PredictDoctorView(APIView):
+class PredictDoctorAPI(APIView):
     class InputSerializer(serializers.Serializer):
         symptoms = serializers.CharField()
 
@@ -29,12 +29,12 @@ class PredictDoctorView(APIView):
                 status=status.HTTP_200_OK,
             )
 
-        diseases = give_disease(input_text=symptoms)
+        diseases = give_disease_spacy(input_text=symptoms)
 
         if not diseases:
             return Response(
                 data={
-                    "data": "Sorry we couldn't find you a doctor. Sorry for inconvenience."
+                    "data": "Sorry we couldn't find you a doctor. Please add more information"
                 },
                 status=status.HTTP_200_OK,
             )
@@ -44,4 +44,4 @@ class PredictDoctorView(APIView):
                     res = {disease : key}
                     if res not in result:
                         result.append(res)
-        return Response(data={"data": result}, status=status.HTTP_200_OK)
+        return Response(data={"data": result[:2]}, status=status.HTTP_200_OK)
